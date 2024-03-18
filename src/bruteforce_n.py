@@ -1,23 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
-# Fungsi untuk menghitung faktorial
 
-
-def factorial(n):
-    if n == 0:
+def binomial_coef(n, c) :
+    if c < 0 or c > n:
+        return 0
+    if c == 0 or c == n:
         return 1
-    else:
-        return n * factorial(n - 1)
+    return binomial_coef(n - 1, c - 1) + binomial_coef(n - 1, c)
 
-# Fungsi untuk menghitung kombinasi
-
-
-def combination(n, k):
-    return factorial(n) / (factorial(k) * factorial(n - k))
-
-# Fungsi untk mencari titik pada kurva bezier dengan bruteforce untuk n titik
-
-
+# Fungsi untuk mencari titik pada kurva bezier dengan bruteforce untuk n titik
 def bezier_points_with_bruteforce_n(points, iteration):
     total = 2 ** iteration + 1
     n = len(points) - 1
@@ -25,7 +16,7 @@ def bezier_points_with_bruteforce_n(points, iteration):
     bezier_points = np.zeros((total, 2))
     # Memakai rumus polinomial bernstein
     for i in range(n + 1):
-        coef = combination(n, i)
+        coef = binomial_coef(n, i)
         for j in range(total):
             formula = coef * (t[j] ** i) * ((1 - t[j]) ** (n - i))
             bezier_points[j] += np.array(points[i]) * formula
