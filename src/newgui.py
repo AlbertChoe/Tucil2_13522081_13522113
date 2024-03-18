@@ -5,6 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.animation import FuncAnimation
 from dnc_n import bezier_points_with_dnc_n
 from bruteforce_n import bezier_points_with_bruteforce_n
+from bruteforce import bezier_points_with_bruteforce
 import time
 
 bg_color = "#f0f0f0"
@@ -45,10 +46,26 @@ def plot_bezier_curve():
 
     # Plot Bézier curve using brute force with animation
     start_time_brute = time.time()
-    bezier_points = bezier_points_with_bruteforce_n(control_points, iterations)
+    if len(control_points) == 3:
+        bezier_points = bezier_points_with_bruteforce(
+            control_points, iterations)
+
+    else:
+        bezier_points = bezier_points_with_bruteforce_n(
+            control_points, iterations)
+
     end_time_brute = time.time()
     time_taken_brute = (end_time_brute - start_time_brute) * 1000
     print(f'Bruteforce\nTime: {time_taken_brute:.5f} ms')
+
+    # Plot Bézier curve using divide and conquer with animation
+    start_time_dnc = time.time()
+    a = bezier_points_with_dnc_n(control_points, iterations)
+    end_time_dnc = time.time()
+    time_taken_dnc = (end_time_dnc - start_time_dnc) * \
+        1000  # Convert to milliseconds
+    print(f'dnc\nTime: {time_taken_dnc:.5f} ms')
+
     ax1.plot(*zip(*control_points), 'ro--', label='Control Points')
     bezier_lines_brute = []
     for i in range(1, len(bezier_points) + 1):  # Include the last point in the range
@@ -66,14 +83,6 @@ def plot_bezier_curve():
         len(bezier_points)), interval=500/iterations, blit=True)
     ax1.set_title(f'Bruteforce\nTime: {time_taken_brute:.5f} ms')
     ax1.legend()
-
-    # Plot Bézier curve using divide and conquer with animation
-    start_time_dnc = time.time()
-    a = bezier_points_with_dnc_n(control_points, iterations)
-    end_time_dnc = time.time()
-    time_taken_dnc = (end_time_dnc - start_time_dnc) * \
-        1000  # Convert to milliseconds
-    print(f'dnc\nTime: {time_taken_dnc:.5f} ms')
 
     ax2.plot(*zip(*control_points), 'ro--', label='Control Points')
     bezier_lines_dnc = []
