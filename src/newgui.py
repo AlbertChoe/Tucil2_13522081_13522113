@@ -5,7 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.animation import FuncAnimation
 from dnc_n import bezier_points_with_dnc_n
 from bruteforce_n import bezier_points_with_bruteforce_n
-
+import time
 
 bg_color = "#f0f0f0"
 text_color = "#333333"
@@ -35,6 +35,7 @@ def plot_bezier_curve():
             "Invalid input. Please check the format of the control points and iterations.")
         return
 
+    # Clear existing graphs
     for widget in frame_graphs.winfo_children():
         widget.destroy()
 
@@ -42,9 +43,12 @@ def plot_bezier_curve():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
     fig.suptitle('Bézier Curve Comparison')
 
-   # animasi untuk bruteforce
+    # Plot Bézier curve using brute force with animation
+    start_time_brute = time.time()
     bezier_points = bezier_points_with_bruteforce_n(control_points, iterations)
-    # print(bezier_points)
+    end_time_brute = time.time()
+    time_taken_brute = (end_time_brute - start_time_brute) * 1000
+    print(f'Bruteforce\nTime: {time_taken_brute:.5f} ms')
     ax1.plot(*zip(*control_points), 'ro--', label='Control Points')
     bezier_lines_brute = []
     for i in range(1, len(bezier_points) + 1):  # Include the last point in the range
@@ -58,11 +62,18 @@ def plot_bezier_curve():
         return bezier_lines_brute
 
     ani_brute = FuncAnimation(fig, update_brute, frames=range(
-        len(bezier_points)), interval=500, blit=True)
-    ax1.set_title('Brute Force Method')
+        len(bezier_points)), interval=500/iterations, blit=True)
+    ax1.set_title(f'Bruteforce\nTime: {time_taken_brute:.5f} ms')
     ax1.legend()
 
-    # Membuat animasi
+    # Plot Bézier curve using divide and conquer with animation
+    start_time_dnc = time.time()
+    a = bezier_points_with_dnc_n(control_points, iterations)
+    end_time_dnc = time.time()
+    time_taken_dnc = (end_time_dnc - start_time_dnc) * \
+        1000  # Convert to milliseconds
+    print(f'dnc\nTime: {time_taken_dnc:.5f} ms')
+
     ax2.plot(*zip(*control_points), 'ro--', label='Control Points')
     bezier_lines_dnc = []
     for i in range(iterations + 1):
@@ -73,6 +84,7 @@ def plot_bezier_curve():
             bezier_points_flat + [control_points[-1]]
         line, = ax2.plot(*zip(*bezier_points_flat), 'b-',
                          label='Bezier Curve' if i == iterations else None)
+        print(bezier_points_flat)
         bezier_lines_dnc.append(line)
 
     def update_dnc(frame):
@@ -87,9 +99,10 @@ def plot_bezier_curve():
 
     ani_dnc = FuncAnimation(fig, update_dnc, frames=range(
         iterations + 1), interval=500, blit=True)
-    ax2.set_title('Divide and Conquer Method')
+    ax2.set_title(f'Divide and Conquer Method\nTime: {time_taken_dnc:.5f} ms')
     ax2.legend()
 
+    # Embed the graphs into the Tkinter GUI
     canvas = FigureCanvasTkAgg(fig, master=frame_graphs)
     canvas.draw()
     canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
