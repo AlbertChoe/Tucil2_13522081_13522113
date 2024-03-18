@@ -7,8 +7,6 @@ def find_mid_point(point1, point2):
     return ((point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2)
 
 # Ini untuk menyimpan semua titik yang dihasilkan
-
-
 def bezier_points_with_dnc_n(point, iteration):
     iteration_points = []
     save_point = []
