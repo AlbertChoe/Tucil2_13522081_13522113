@@ -54,6 +54,7 @@ def plot_bezier_curve():
     for i in range(1, len(bezier_points) + 1):  # Include the last point in the range
         line, = ax1.plot(*zip(*bezier_points[:i]), 'b-',
                          label='Bezier Curve' if i == len(bezier_points) else None)
+        ax1.scatter(*zip(*bezier_points[:i]), c='g', marker='o')
         bezier_lines_brute.append(line)
 
     def update_brute(frame):
@@ -82,9 +83,9 @@ def plot_bezier_curve():
             item for sublist in bezier_points_dnc for subsublist in sublist for item in subsublist]
         bezier_points_flat = [control_points[0]] + \
             bezier_points_flat + [control_points[-1]]
+        ax2.scatter(*zip(*bezier_points_flat), c='g', marker='o')
         line, = ax2.plot(*zip(*bezier_points_flat), 'b-',
                          label='Bezier Curve' if i == iterations else None)
-        print(bezier_points_flat)
         bezier_lines_dnc.append(line)
 
     def update_dnc(frame):
