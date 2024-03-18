@@ -9,6 +9,7 @@ from tkinter import messagebox
 # Import your bezier functions
 from dnc_n import bezier_points_with_dnc_n
 from bruteforce_n import bezier_points_with_bruteforce_n
+from bruteforce import bezier_points_with_bruteforce
 
 # Define colors for UI
 bg_color = "#f0f0f0"
@@ -61,7 +62,14 @@ def plot_with_brute_force(control_points, iterations):
     fig, ax = plt.subplots(figsize=(5, 5))
 
     start_time_brute = time.time()
-    bezier_points = bezier_points_with_bruteforce_n(control_points, iterations)
+    if len(control_points) == 3:
+        bezier_points = bezier_points_with_bruteforce(
+            control_points, iterations)
+
+    else:
+        bezier_points = bezier_points_with_bruteforce_n(
+            control_points, iterations)
+
     end_time_brute = time.time()
     time_taken_brute = (end_time_brute - start_time_brute) * 1000
     print(f'Bruteforce\nTime: {time_taken_brute:.5f} ms')
