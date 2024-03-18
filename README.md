@@ -1,16 +1,13 @@
-# Tucil2_13522081_13522113
-
-Tucil2 Stima
-
 <h1 align="center">Tugas Kecil 2 IF2211 Strategi Algoritma</h1>
 <h1 align="center"> Semester II tahun 2023/2024 </h1>
 <h1 align="center"> Building Bézier Curves with the Midpoint Algorithm based on Divide and Conquer </h1>
 
 <h1 align=""> Kelompok 97 </h1>
-| NIM      | Nama                    | Kelas |
-| -------- | ----------------------- | ----- |
-| 13522081 | Albert                  | K-01  |
-| 13522113 | Wiliam Glory Henderson  | K-01  |
+
+| NIM      | Nama                   | Kelas |
+| -------- | ---------------------- | ----- |
+| 13522081 | Albert                 | K-01  |
+| 13522113 | Wiliam Glory Henderson | K-01  |
 
 ## Table of Contents
 
@@ -20,7 +17,6 @@ Tucil2 Stima
 - [Programming Language](#Programming-Language)
 - [Application Overview](#Application-Overview)
 - [Link](#link)
-<!-- <!-- * [License](#license) -- -->
 
 ## General-Info
 
@@ -56,6 +52,7 @@ Python
 
 ## Application-Overview
 
+![alt text](/img/image1.png)
 ![alt text](/img/image.png)
 
 ## Link
