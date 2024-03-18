@@ -73,24 +73,20 @@ def plot_with_brute_force(control_points, iterations):
     end_time_brute = time.time()
     time_taken_brute = (end_time_brute - start_time_brute) * 1000
     print(f'Bruteforce\nTime: {time_taken_brute:.5f} ms')
-    print(bezier_points)
+    # print(bezier_points)
     ax.plot(*zip(*control_points), 'ro--', label='Control Points')
-    bezier_lines_brute = []
-    for i in range(1, len(bezier_points) + 1):  # Include the last point in the range
-        line, = ax.plot(*zip(*bezier_points[:i]), 'b-',
-                        label='Bezier Curve' if i == len(bezier_points) else None)
-        ax.scatter(*zip(*bezier_points[:i]), c='g', marker='o')
-        bezier_lines_brute.append(line)
-
+    ax.scatter(*zip(*bezier_points), c='g', marker='o')
+    bezier_line, = ax.plot(*zip(*bezier_points[:1]), 'b-', label='Bezier Curve')
+    
     def update_brute(frame):
-        for i, line in enumerate(bezier_lines_brute):
-            line.set_visible(i <= frame)
-        return bezier_lines_brute
+        bezier_line.set_data(*zip(*bezier_points[:frame+1]))
+        return bezier_line,
 
     ani_brute = FuncAnimation(fig, update_brute, frames=range(
         len(bezier_points)), interval=500/iterations, blit=True)
     ax.set_title(f'Bruteforce\nTime: {time_taken_brute:.5f} ms')
     ax.legend()
+    
     # Embed the graph into the Tkinter GUI
     canvas = FigureCanvasTkAgg(fig, master=frame_graphs)
     canvas.draw()
@@ -106,7 +102,6 @@ def plot_with_dnc(control_points, iterations):
     time_taken_dnc = (end_time_dnc - start_time_dnc) * \
         1000  # Convert to milliseconds
     print(f'dnc\nTime: {time_taken_dnc:.5f} ms')
-    print(a)
     ax.plot(*zip(*control_points), 'ro--', label='Control Points')
     bezier_lines_dnc = []
     for i in range(iterations + 1):
@@ -115,10 +110,10 @@ def plot_with_dnc(control_points, iterations):
             item for sublist in bezier_points_dnc for subsublist in sublist for item in subsublist]
         bezier_points_flat = [control_points[0]] + \
             bezier_points_flat + [control_points[-1]]
-        ax.scatter(*zip(*bezier_points_flat), c='g', marker='o')
         line, = ax.plot(*zip(*bezier_points_flat), 'b-',
-                        label='Bezier Curve' if i == iterations else None)
+                        label='Bezier Curve',  marker='o')
         bezier_lines_dnc.append(line)
+    # print(bezier_points_flat)
 
     def update_dnc(frame):
         if frame == iterations:
