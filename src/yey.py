@@ -75,8 +75,7 @@ def plot_with_brute_force(control_points, iterations):
     print(f'Bruteforce\nTime: {time_taken_brute:.5f} ms')
     # print(bezier_points)
     ax.plot(*zip(*control_points), 'ro--', label='Control Points')
-    ax.scatter(*zip(*bezier_points), c='g', marker='o')
-    bezier_line, = ax.plot(*zip(*bezier_points[:1]), 'b-', label='Bezier Curve')
+    bezier_line, = ax.plot(*zip(*bezier_points[:1]), 'b-', marker = 'o', label='Bezier Curve')
     
     def update_brute(frame):
         bezier_line.set_data(*zip(*bezier_points[:frame+1]))
@@ -111,7 +110,7 @@ def plot_with_dnc(control_points, iterations):
         bezier_points_flat = [control_points[0]] + \
             bezier_points_flat + [control_points[-1]]
         line, = ax.plot(*zip(*bezier_points_flat), 'b-',
-                        label='Bezier Curve',  marker='o')
+                        label='Bezier Curve' if iterations == i else None,  marker='o')
         bezier_lines_dnc.append(line)
     # print(bezier_points_flat)
 
