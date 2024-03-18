@@ -16,6 +16,7 @@ bg_color = "#f0f0f0"
 text_color = "#333333"
 button_color = "#e0e0e0"
 frame_color = "#d0d0d0"
+placeholder_label = None
 
 
 def parse_input(input_str, iterations_str):
@@ -39,6 +40,8 @@ def parse_input(input_str, iterations_str):
 
 
 def plot_bezier_curve(method):
+    global placeholder_label
+
     input_str = entry_control_points.get()
     iterations_str = entry_iterations.get()
     control_points, iterations = parse_input(input_str, iterations_str)
@@ -48,14 +51,27 @@ def plot_bezier_curve(method):
             "Invalid input. Please check the format of the control points and iterations.")
         return
 
-    # Clear existing graphs
+    # Clear existing graphs and remove placeholder text
     for widget in frame_graphs.winfo_children():
         widget.destroy()
+
+    # Display loading message
+    loading_label = ttk.Label(
+        frame_graphs, text="Loading...", background=frame_color, foreground=text_color)
+    loading_label.pack()
+    frame_graphs.update()
 
     if method == "brute":
         plot_with_brute_force(control_points, iterations)
     elif method == "dnc":
         plot_with_dnc(control_points, iterations)
+
+    # Remove loading message or update it
+    loading_label.destroy()  # Remove the label
+
+    # Hide the placeholder label if it exists
+    if placeholder_label is not None:
+        placeholder_label.pack_forget()
 
 
 def plot_with_brute_force(control_points, iterations):
@@ -75,17 +91,18 @@ def plot_with_brute_force(control_points, iterations):
     print(f'Bruteforce\nTime: {time_taken_brute:.5f} ms')
     # print(bezier_points)
     ax.plot(*zip(*control_points), 'ro--', label='Control Points')
-    bezier_line, = ax.plot(*zip(*bezier_points[:1]), 'b-', marker = 'o', label='Bezier Curve')
-    
+    bezier_line, = ax.plot(
+        *zip(*bezier_points[:1]), 'b-', marker='o', label='Bezier Curve')
+
     def update_brute(frame):
         bezier_line.set_data(*zip(*bezier_points[:frame+1]))
         return bezier_line,
 
     ani_brute = FuncAnimation(fig, update_brute, frames=range(
-        len(bezier_points)), interval=500/iterations, blit=True)
+        len(bezier_points)), interval=20, blit=True)
     ax.set_title(f'Bruteforce\nTime: {time_taken_brute:.5f} ms')
     ax.legend()
-    
+
     # Embed the graph into the Tkinter GUI
     canvas = FigureCanvasTkAgg(fig, master=frame_graphs)
     canvas.draw()
@@ -147,13 +164,26 @@ style.configure('Custom.TFrame', background=frame_color)
 frame_inputs = ttk.Frame(root, padding="10", relief=tk.RIDGE,
                          borderwidth=2, style='Custom.TFrame')
 frame_inputs.pack(padx=10, pady=10, fill=tk.X)
-
 frame_graphs = ttk.Frame(root, padding="10", style='Custom.TFrame')
 frame_graphs.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+# Create a center frame to hold the placeholder label
+center_frame = ttk.Frame(frame_graphs, style='Custom.TFrame')
+center_frame.pack(expand=True, fill=tk.BOTH)
+
+# Add placeholder text to the center frame
+placeholder_label = ttk.Label(
+    center_frame,
+    text="No graph to display. Input control point and iteration then click plot button to show the graph",
+    background=frame_color,
+    foreground=text_color,
+    font=('Helvetica', 15)  # Specify the font family and size
+)
+
+placeholder_label.pack(pady=10, padx=10, expand=True)
 
 # Inputs for control points and iterations
 label_control_points = ttk.Label(
-    frame_inputs, text='Control Points(x,y),(x,y),.. :', background=frame_color, foreground=text_color)
+    frame_inputs, text='Control Points(x,y),(xi,yi) :', background=frame_color, foreground=text_color)
 entry_control_points = ttk.Entry(frame_inputs, width=40)
 label_iterations = ttk.Label(
     frame_inputs, text='Iterations:', background=frame_color, foreground=text_color)
