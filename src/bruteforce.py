@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+# Fungsi untuk mencari titik pada kurva bezier dengan bruteforce untuk 3 titik
 def bezier_points_with_bruteforce(points, iteration):
     points = np.array(points)
     total = 2 ** iteration + 1

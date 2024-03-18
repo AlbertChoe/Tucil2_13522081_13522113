@@ -1,10 +1,11 @@
 import matplotlib.pyplot as plt
 
 
+# Fungsi untuk mencari titik tengah
 def find_mid_point(point1, point2):
     return ((point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2)
 
-
+# Fungsi untuk mencari titik pada kurva bezier dengan dnc untuk 3 titik
 def bezier_points_with_dnc(point1, point2, point3, current_iteration, iteration, bezier_points):
     if current_iteration < iteration:
         mid_point1 = find_mid_point(point1, point2)
@@ -21,7 +22,7 @@ def bezier_points_with_dnc(point1, point2, point3, current_iteration, iteration,
         bezier_points_with_dnc(mid_point, mid_point2, point3,
                                current_iteration, iteration, bezier_points)
 
-
+# Fungsi untuk menggabungkan titik awal, titik akhir, dan hasil titik dari dnc
 def generate_bezier(point1, point2, point3, iterations):
     bezier_points = [point1]
     bezier_points_with_dnc(point1, point2, point3, 0,
